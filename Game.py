@@ -14,7 +14,17 @@ class Game:
         for p in self.players:
             self.on_bar[p] = []
             self.off_board[p] = []
-            self.pieces_left[p] = 0
+            self.pieces_left[p] = 15
+
+        # Initialize the board with a hard coded set-up for each point (0 indexed!)
+        self.board[0].append['white' for _ in range(1,2)]
+        self.board[5].append['black' for _ in range(1,5)]
+        self.board[7].append['black' for _ in range(1,3)]
+        self.board[11].append['white' for _ in range(1,5)]
+        self.board[12].append['black' for _ in range(1,5)]
+        self.board[16].append['white' for _ in range(1,3)]
+        self.board[18].append['white' for _ in range(1,5)]
+        self.board[23].append['black' for _ in range(1,2)]
 
     def roll_dice(self):
         return (random.randint(1,6), random.randint(1,6))
@@ -81,3 +91,7 @@ class Game:
             self.players[0]
 
         return self.players[1]
+
+    # Print the contents of a desired point on the board
+    def print_point(self, point):
+        print("Point #{} has {} pieces: {}".format(point, len(self.board[point], self.board[point)))
