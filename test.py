@@ -1,4 +1,6 @@
 import Game
 
 g = Game.Game()
-g.print_point(0)
+
+r = g.roll_dice()
+g.find_moves(r, g.players[0])

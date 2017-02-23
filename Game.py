@@ -14,7 +14,7 @@ class Game:
             self.off_board[p] = []
             self.pieces_left[p] = 15
 
-        # # Initialize the board with a hard coded set-up for each point (0 indexed!)
+        # Initialize the board with a hard coded set-up for each point (0 indexed!)
         for i in range(2):
             self.board[0].append('white')
         for i in range(5):
@@ -42,7 +42,8 @@ class Game:
         # Determine how many rolls
         # Did we roll doubles?
         if r1 == r2:
-            j = 4
+            print("Player {} rolled double {}'s!".format(player, r1))
+            j = 2
         else:
             j = 2
 
@@ -61,8 +62,15 @@ class Game:
             piece = self.on_bar[p].pop()
             self.board[r1-1].append(piece)
 
-            # Now we need to do something with the other roll
-
+        print("Player {} has no pieces on the bar".format(player))
+        # Can the player hit the other player?
+        for i in range(len(self.board)):
+            # print(self.board[i][len(self.board[i])])
+            if self.board[i] == player:
+                print('yup')
+                # Check to see if the point a roll away has 1 opponent piece
+                if len(self.board[i + r1]) == 1 and self.board[i + r1] == get_opponent(player):
+                    print("Player {} can hit! point {}".format(player, self.board[i + r1]))
 
 
 
