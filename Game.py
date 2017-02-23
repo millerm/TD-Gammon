@@ -34,7 +34,6 @@ class Game:
         if len(self.on_bar[player]) >= 1:
             # Does the point where we would put the piece have no pieces or is it controlled by the player?
             if self.board[r1-1] <=1 or self.board[len(self.board[r1-1] - 1 ] == player:
-                # TO FINISH:
                 # Does the point where we would put the piece have 1 stone that is the opposite player's color?
                 If self.board[r1-1] = 1 and self.board[len(self.board[r1-1] - 1 ] != player:
                     piece = self.on_bar[player].pop()
@@ -46,16 +45,19 @@ class Game:
             piece = self.on_bar[p].pop()
             self.board[r1-1].append(piece)
 
+            # Now we need to do something with the other roll
+
+
 
 
 
     def is_valid_move(self, start, end, piece_color):
-        if len(self.board[start]) > 0 and self.board[start][0] == piece_color:
+        if len(self.board[start]) > 0 and self.board[start] == piece_color:
             if end < 0 or end >= len(self.board):
                 return False
             if len(self.board[end]) <= 1:
                 return True
-            if len(self.board[end]) > 1 and self.board[end][-1] == piece_color:
+            if len(self.board[end]) > 1 and self.board[end] == piece_color:
                 return True
         return False
 
