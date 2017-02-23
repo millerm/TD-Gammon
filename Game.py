@@ -31,19 +31,19 @@ class Game:
         else
             j = 2
 
-
-
         # Are there pieces on the bar for the given player?
         if len(self.on_bar[player]) >= 1:
             # Does the point where we would put the piece have no pieces or is it controlled by the player?
             if self.board[r1-1] <=1 or self.board[len(self.board[r1-1] - 1 ] == player:
+                # TO FINISH:
                 # Does the point where we would put the piece have 1 stone that is the opposite player's color?
                 If self.board[r1-1] = 1 and self.board[len(self.board[r1-1] - 1 ] != player:
+                    piece = self.on_bar[p].pop()
 
-                piece = self.on_bar[p].pop()
-                self.board[r-1].append(piece)
+            piece = self.on_bar[p].pop()
+            self.board[r1-1].append(piece)
 
-
+        
 
 
     def is_valid_move(self, start, end, piece_color):
