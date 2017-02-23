@@ -17,7 +17,8 @@ class Game:
         # Initialize the board with a hard coded set-up for each point (0 indexed!)
         for i in range(2):
             self.board[0].append('white')
-        for i in range(5):
+        self.board[1].append('black')
+        for i in range(4):
             self.board[5].append('black')
         for i in range(3):
             self.board[7].append('black')
@@ -37,6 +38,8 @@ class Game:
 
 
     def find_moves(self, roll, player):
+        for i in range(len(self.board)):
+            self.print_point(i)
         r1, r2 = roll[0], roll[1]
 
         # Determine how many rolls
@@ -47,6 +50,7 @@ class Game:
         else:
             j = 2
 
+        print("R1 = {}".format(r1))
         # Are there pieces on the bar for the given player?
         if len(self.on_bar[player]) >= 1:
             # Does the point where we would put the piece have no pieces or is it controlled by the player?
@@ -63,15 +67,27 @@ class Game:
             self.board[r1-1].append(piece)
 
         print("Player {} has no pieces on the bar".format(player))
+        print("player {} opponent is {}".format(player, self.get_opponent(player)))
+
         # Can the player hit the other player?
         for i in range(len(self.board)):
-            # print(self.board[i][len(self.board[i])])
-            if self.board[i] == player:
-                print('yup')
-                # Check to see if the point a roll away has 1 opponent piece
-                if len(self.board[i + r1]) == 1 and self.board[i + r1] == get_opponent(player):
-                    print("Player {} can hit! point {}".format(player, self.board[i + r1]))
+            if len(self.board[i]) > 0:
+                if self.board[i][0] == player:
+                    # Check to see if the point a roll away has 1 opponent piece
+                    if i + r1 <= len(self.board):
+                        if len(self.board[i + r1]) == r1 and self.board[i + r1][0] == self.get_opponent(player):
 
+                            print("Player {} can hit on point {}".format(player, [i + r1]))
+                            hit_piece = self.board[i + r1].pop()
+                            self.on_bar[self.get_opponent(player)].append(hit_piece)
+                            moved_piece = self.board[i].pop()
+                            self.board[i + r1].append(moved_piece)
+
+                            print("Player {} has {} pieces on the bar".format(self.get_opponent(player), len(self.on_bar[self.get_opponent(player)])))
+                            for i in range(len(self.board)):
+                                self.print_point(i)
+
+        # Can the player move? 
 
 
 
@@ -96,8 +112,8 @@ class Game:
     # Get the opposite color of the given player (useful for hitting)
     def get_opponent(self, player):
         for p in self.players:
-            if p != self.players[p]:
-                return self.players[p]
+            if p != player:
+                return p
 
     # Determine which player has won
     def find_winner(self):
