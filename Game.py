@@ -22,7 +22,6 @@ class Game:
 
     def find_moves(self, roll, player):
         r1, r2 = roll[0], roll[1]
-        moves = []
 
         # Determine how many rolls
         # Did we roll doubles?
@@ -38,12 +37,16 @@ class Game:
                 # TO FINISH:
                 # Does the point where we would put the piece have 1 stone that is the opposite player's color?
                 If self.board[r1-1] = 1 and self.board[len(self.board[r1-1] - 1 ] != player:
-                    piece = self.on_bar[p].pop()
+                    piece = self.on_bar[player].pop()
+                    if self.board[r1-1] = get_opponent(player):
+                        hit = self.board[r1-1].pop()
+                        self.on_bar[get_opponent(player)].append(hit)
+                        self.board[r1-1].append(piece);
 
             piece = self.on_bar[p].pop()
             self.board[r1-1].append(piece)
 
-        
+
 
 
     def is_valid_move(self, start, end, piece_color):
@@ -63,6 +66,12 @@ class Game:
                 True
             else
                 return False
+
+    # Get the opposite color of the given player (useful for hitting)
+    def get_opponent(self, player):
+        for p in self.players:
+            if p != self.players[p]:
+                return self.players[p]
 
     # Determine which player has won
     def find_winner(self):
