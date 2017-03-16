@@ -9,7 +9,7 @@ net = net.Net()
 count = 0
 wins = 0
 
-while count < 1:
+while count < 1000:
     count += 1
     print("Game #:{}".format(count))
     g = Game.Game()
