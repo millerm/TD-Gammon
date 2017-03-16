@@ -39,9 +39,6 @@ class Game:
 
 
     def find_moves(self, roll, player):
-        for i in range(len(self.board)):
-            self.print_point(i)
-
         moves = []
         # Probably can get rid of this and just reference the indices of the roll
         r1, r2 = roll
@@ -190,12 +187,10 @@ class Game:
                                 move = (i, i - combo)
                                 moves.append(move)
 
-        # print('moves', r, moves, len(moves))
-        print("roll was {}".format(roll))
+        # print("roll was {}".format(roll))
         return(moves)
 
     def take_action(self, player, move):
-        print("Action taken: {}".format(move))
         # If there is a piece on the bar then move that first
         start, end = move
         if end == 'off':
@@ -236,13 +231,25 @@ class Game:
                 moved_piece = self.board[start].pop()
                 self.board[end].append(moved_piece)
 
-        return
+    def undo_action(self, player, move):
+        start, end = move
+
+        if end == 'off':
+            moved_piece = self.off_board[player].pop()
+            self.board[start].append(moved_piece)
+            self.pieces_left[player] += 1
+
+        elif start == 'bar':
+            moved_piece = self.board[end].pop()
+            self.on_bar[player].append(moved_piece)
+        else:
+            moved_piece = self.board[end].pop()
+            self.board[start].append(moved_piece)
 
     # Check to see if the game is over
     def game_over(self):
         for p in self.players:
             if len(self.off_board[p]) == 15 and self.pieces_left[p] == 0:
-                print("{} won the game".format(p))
                 return True
 
     # Get the opposite color of the given player (useful for hitting)
@@ -253,11 +260,68 @@ class Game:
 
     # Determine which player has won
     def find_winner(self):
-        if (self.off_board[0] == 15 and self.pieces_left[0] == 0):
-            self.players[0]
+        if (len(self.off_board[self.players[0]]) == 15 and self.pieces_left[self.players[0]] == 0):
+            return self.players[0]
 
         return self.players[1]
 
     # Print the contents of a desired point on the board
     def print_point(self, point):
         print("Point #{} has {} pieces: {}".format(point, len(self.board[point]), self.board[point]))
+
+
+    def get_representation(self, board, players, on_bar, off_board, turn):
+        # "There were a total of 198 input units..."
+        network_input = []
+        units = []
+        # "For each point on the board, for units indicated the number of white pieces on the point"
+        for p in players:
+            for i in range(0, 24):
+                if len(board[i]) >= 1:
+                    if board[i][0] == p:
+                        if len(board[i]) == 1:
+                            units.append(1)
+                            for i in range(1,4):
+                                units.append(0)
+                        elif len(board[i]) == 2:
+                            for i in range(0,2):
+                                units.append(1)
+                            for i in range(2, 4):
+                                units.append(0)
+                        elif len(board[i]) == 3:
+                            for i in range(0,3):
+                                units.append(1)
+                            units.append(0)
+                        elif len(board[i]) > 3:
+                            num_pieces = len(board[i])
+                            for i in range(0, 3):
+                                units.append(1)
+                            units.append(float(((num_pieces - 3) / 2)))
+
+                    else:
+                        for i in range(0,4):
+                            units.append(0)
+                else:
+                        for i in range(0,4):
+                            units.append(0)
+
+
+        units.append(len(on_bar['white']) / 2)
+        units.append(len(on_bar['black']) / 2)
+
+        if (len(off_board['white']) > 0):
+            units.append(len(off_board['white']) / 15)
+        else: units.append(0)
+
+        if (len(off_board['black']) > 0):
+            units.append(len(off_board['black']) / 15)
+        else: units.append(0)
+
+        if turn == 'white':
+            units.append(1)
+            units.append(0)
+        else:
+            units.append(0)
+            units.append(1)
+
+        return units
