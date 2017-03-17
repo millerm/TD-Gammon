@@ -102,9 +102,9 @@ class Net(object):
 
         for k in range(0,2):
             for j in range(0, 40):
-                self.hidden_weights[j][k] += self.learning_rate * error[k] * self.hidden_eligibility_trace[j][k]
+                self.hidden_weights[j][k] += self.learning_rate * error * self.hidden_eligibility_trace[j][k]
                 for i in range(0, 198):
-                    self.input_weights[i][j] += self.learning_rate * error[k] * self.input_eligibility_trace[i][j][k]
+                    self.input_weights[i][j] += self.learning_rate * error * self.input_eligibility_trace[i][j][k]
 
     # Helpers to save so I don't have to spend hours training again.
     def save(self):
