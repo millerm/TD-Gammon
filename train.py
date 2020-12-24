@@ -1,6 +1,5 @@
 import Game
 import time
-import neural_net
 import net
 import copy
 
@@ -15,8 +14,8 @@ while count < 1000:
     g = Game.Game()
 
     # print("White player rolled {}, Black player rolled {}".format(p1Roll[0] + p1Roll[1], p2Roll[0] + p2Roll[1]))
-    p1Roll = (0,0)
-    p2Roll = (0,0)
+    p1Roll = (0, 0)
+    p2Roll = (0, 0)
     while sum(p1Roll) == sum(p2Roll):
         p1Roll = g.roll_dice()
         p2Roll = g.roll_dice()
@@ -35,10 +34,10 @@ while count < 1000:
         actions = []
 
         if start == 1:
-                actions = g.find_moves(p1Roll, g.turn)
-                start = 0
+            actions = g.find_moves(p1Roll, g.turn)
+            start = 0
         else:
-                actions = g.find_moves(g.roll_dice(), g.turn)
+            actions = g.find_moves(g.roll_dice(), g.turn)
 
         if len(actions) > 0:
             values = []
@@ -46,7 +45,9 @@ while count < 1000:
             # Find the action with the most appealing value
             for action in actions:
                 g.take_action(g.turn, action)
-                representation = g.get_representation(g.board, g.players, g.on_bar, g.off_board, g.turn)
+                representation = g.get_representation(
+                    g.board, g.players, g.on_bar, g.off_board, g.turn
+                )
                 values.append(net.getValue(representation))
                 # Undo the action and try the rest
                 g.undo_action(g.turn, action)
@@ -57,15 +58,15 @@ while count < 1000:
             min = 1
             min_index = 0
             for i in range(0, len(values)):
-                if g.turn == 'white':
+                if g.turn == "white":
                     if max < values[i][0]:
                         max = values[i][0]
                         max_index = i
-                elif g.turn == 'black':
+                elif g.turn == "black":
                     if min > values[i][1]:
                         min = values[i][1]
                         min_index = i
-            if g.turn == 'white':
+            if g.turn == "white":
                 best_action = actions[max_index]
             else:
                 best_action = actions[min_index]
@@ -74,8 +75,10 @@ while count < 1000:
             g.take_action(g.turn, best_action)
 
             # Get the representation
-            expected_board = g.get_representation(g.board, g.players, g.on_bar, g.off_board, g.turn)
-            if g.turn == 'white':
+            expected_board = g.get_representation(
+                g.board, g.players, g.on_bar, g.off_board, g.turn
+            )
+            if g.turn == "white":
                 # Save the state
                 states.append(expected_board)
                 # print(net.getValue(expected_board))
@@ -89,7 +92,7 @@ while count < 1000:
                 print("Num states: ", len(states))
                 print("{} won".format(g.find_winner()))
 
-                if g.find_winner() == 'white':
+                if g.find_winner() == "white":
                     reward = 1
                     wins += 1
                 for i in range(len(g.board)):
@@ -97,15 +100,15 @@ while count < 1000:
 
     # Build the eligibility trace with the list of states white has accumulated
     for i in range(0, len(states) - 2):
-            print("State:", i)
+        print("State:", i)
 
-            # Feed in current state and the next state
-            # the eligibility is based on states t and t+1
-            current_state = states[i]
-            predicted_state = states[i+1]
+        # Feed in current state and the next state
+        # the eligibility is based on states t and t+1
+        current_state = states[i]
+        predicted_state = states[i + 1]
 
-            error = net.getValue(predicted_state)[0] - net.getValue(current_state)[0]
-            net.feedforward(current_state)
-            net.do_td(current_state, net.getValue(current_state), error)
-    print("Win percentage: {}".format(wins/count))
+        error = net.getValue(predicted_state)[0] - net.getValue(current_state)[0]
+        net.feedforward(current_state)
+        net.do_td(current_state, net.getValue(current_state), error)
+    print("Win percentage: {}".format(wins / count))
 # net.save()
