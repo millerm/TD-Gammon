@@ -1,5 +1,5 @@
 # TD-Gammon
-An attempt at recreating TD Gammon in Python
+An attempt at recreating TD Gammon.
 
 # To Use:
 - clone repo
